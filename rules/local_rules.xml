@@ -1,0 +1,128 @@
+<!-- ============================================================
+     Custom Wazuh Detection Rules
+     File: local_rules.xml
+     Location on server: /var/ossec/etc/rules/local_rules.xml
+
+     HOW TO INSTALL:
+     1. SSH into Ubuntu: ssh wazuh@192.168.56.101
+     2. Run: sudo nano /var/ossec/etc/rules/local_rules.xml
+     3. Paste this entire file content
+     4. Save: Ctrl+X → Y → Enter
+     5. Reload rules:
+        sudo docker exec single-node_wazuh.manager_1 \
+          /var/ossec/bin/wazuh-control restart
+
+     HOW TO TEST:
+     - Run any sudo command → Rule 100001 should fire
+     - Modify /etc/passwd → Rule 100002 should fire
+     - Create file in /bin → Rule 100003 should fire
+     - Run hydra brute force → Rule 100004 should fire
+     ============================================================ -->
+
+<group name="custom_lab_rules,">
+
+  <!-- ================================================
+       Rule 100001: Detect ANY sudo command usage
+       
+       Why this matters:
+       Sudo gives normal users temporary admin powers.
+       Any sudo usage by a regular user is worth logging,
+       especially if unexpected.
+       
+       Level 8 = HIGH alert
+       MITRE: T1548.003 (Sudo and Sudo Caching)
+       ================================================ -->
+  <rule id="100001" level="8">
+    <if_sid>5402</if_sid>
+    <match>sudo</match>
+    <description>CUSTOM RULE: User executed a sudo command</description>
+    <group>privilege_escalation,custom_alert</group>
+    <mitre>
+      <id>T1548.003</id>
+    </mitre>
+  </rule>
+
+  <!-- ================================================
+       Rule 100002: Detect modification of /etc/passwd
+       
+       Why this matters:
+       /etc/passwd is the user account database.
+       Any change here could mean an attacker added
+       a backdoor account or escalated privileges.
+       
+       Level 12 = CRITICAL alert
+       MITRE: T1078 (Valid Accounts)
+       ================================================ -->
+  <rule id="100002" level="12">
+    <if_sid>550</if_sid>
+    <field name="syscheck.path">/etc/passwd</field>
+    <description>CUSTOM RULE: CRITICAL - /etc/passwd has been modified!</description>
+    <group>critical_file_change,custom_alert</group>
+    <mitre>
+      <id>T1078</id>
+    </mitre>
+  </rule>
+
+  <!-- ================================================
+       Rule 100003: Detect new file created in /bin
+       
+       Why this matters:
+       /bin/ contains essential system binaries.
+       A new file here could be malware disguised as
+       a system tool, or an attacker's backdoor.
+       
+       Level 10 = HIGH alert
+       MITRE: T1543 (Create or Modify System Process)
+       ================================================ -->
+  <rule id="100003" level="10">
+    <if_sid>554</if_sid>
+    <field name="syscheck.path">/bin/</field>
+    <description>CUSTOM RULE: Suspicious new file created in /bin directory!</description>
+    <group>suspicious_file,custom_alert</group>
+    <mitre>
+      <id>T1543</id>
+    </mitre>
+  </rule>
+
+  <!-- ================================================
+       Rule 100004: Brute force — 5+ failures in 30 seconds
+       
+       Why this matters:
+       More sensitive than the default rule — fires faster
+       with fewer attempts, catching slow brute forces too.
+       
+       Level 11 = CRITICAL alert
+       MITRE: T1110 (Brute Force)
+       ================================================ -->
+  <rule id="100004" level="11" frequency="5" timeframe="30">
+    <if_matched_sid>5710</if_matched_sid>
+    <same_source_ip/>
+    <description>CUSTOM RULE: Brute force — 5+ SSH failures in 30s from same IP!</description>
+    <group>authentication_failed,brute_force,custom_alert</group>
+    <mitre>
+      <id>T1110</id>
+    </mitre>
+  </rule>
+
+  <!-- ================================================
+       Rule 100005: Detect nmap scan activity
+       
+       Why this matters:
+       nmap is a reconnaissance tool. If it's running
+       against your server, someone is mapping your
+       network — often the first step of an attack.
+       
+       Level 8 = HIGH alert
+       MITRE: T1046 (Network Service Discovery)
+       ================================================ -->
+  <rule id="100005" level="8">
+    <decoded_as>syslog</decoded_as>
+    <match>nmap</match>
+    <description>CUSTOM RULE: Nmap network scan activity detected!</description>
+    <group>reconnaissance,network_scan,custom_alert</group>
+    <mitre>
+      <id>T1046</id>
+    </mitre>
+  </rule>
+
+</group>

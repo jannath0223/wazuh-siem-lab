@@ -1,0 +1,29 @@
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Credentials — NEVER commit passwords!
+*.password
+credentials.txt
+passwords.txt
+*.key
+
+# Large files
+*.iso
+*.vmdk
+*.vdi
+*.vbox
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+
+# Hydra output
+hydra_results.txt
+/tmp/
+
+# Screenshots (optional — remove # below to track screenshots)
+# screenshots/*.png
+# screenshots/*.jpg
