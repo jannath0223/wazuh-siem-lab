@@ -1,10 +1,7 @@
-Add your Wazuh dashboard screenshots here.
+Screenshots for Wazuh SIEM Lab
 
-Recommended filenames:
-- dashboard_overview.png      ← Main dashboard with alert count
-- attack1_bruteforce.png      ← Brute force alert details
-- attack2_filemod.png         ← File integrity alert
-- attack3_privesc.png         ← Privilege escalation alert
-- attack4_suspicious.png      ← Nmap/netcat alert
-- mitre_attack_map.png        ← MITRE ATT&CK mapping view
-- agent_connected.png         ← Kali agent showing Active (green)
+Files in this folder:
+- 01_wazuh_dashboard.png      ← Wazuh modules overview dashboard
+- 02_agents_active.png        ← Kali agent showing Active status
+- 03_brute_force_alert.png    ← Security events with 225 brute force alerts
+- 05_mitre_mapping.png        ← MITRE ATT&CK dashboard view
