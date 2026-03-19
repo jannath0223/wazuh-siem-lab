@@ -602,7 +602,19 @@ This project is for **educational purposes only**. All attacks must be performed
 ## 📄 License
 
 This project is licensed under the MIT License — see [LICENSE](LICENSE) for details.
+## Screenshots
 
+### 1. Wazuh Dashboard
+![Wazuh Dashboard](screenshots/01_wazuh_dashboard.png)
+
+### 2. Kali Agent — Active
+![Agents Active](screenshots/02_agents_active.png)
+
+### 3. Security Events — 225 Brute Force Alerts
+![Brute Force Alerts](screenshots/03_brute_force_alert.png)
+
+### 4. MITRE ATT&CK Mapping
+![MITRE ATT&CK](screenshots/05_mitre_mapping.png)
 ---
 
 *Built for cybersecurity students learning SIEM, threat detection, and SOC operations.*
